@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Directory</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff7300, #ffea00);
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #4A90E2;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #4A90E2;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #357ABD;
+        }
+
+        .definition-container {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #ff7300;
+        }
+
+        p {
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Urban Directory (shenix)</h1>
+        <input type="text" id="searchInput" placeholder="Cari kata..." />
+        <button onclick="searchWord()">Cari</button>
+        <div id="definitionContainer" class="definition-container">
+            <h2 id="wordTitle"></h2>
+            <p id="wordDefinition"></p>
+        </div>
+    </div>
+    <script>
+        async function searchWord() {
+            const searchInput = document.getElementById('searchInput').value;
+            const definitionContainer = document.getElementById('definitionContainer');
+            const wordTitle = document.getElementById('wordTitle');
+            const wordDefinition = document.getElementById('wordDefinition');
+            
+            // Reset definition container
+            wordTitle.textContent = '';
+            wordDefinition.textContent = '';
+            
+            if (!searchInput.trim()) {
+                alert('Harap masukkan kata yang ingin dicari!');
+                return;
+            }
+
+            // Gunakan API dari Urban Dictionary di sini
+            const apiKey = '005073b88dmshbaebf77f8354152p17bc32jsn05951e88416d';
+            const apiUrl = `https://mashape-community-urban-dictionary.p.rapidapi.com/define?term=${searchInput}`;
+
+            const options = {
+                method: 'GET',
+                headers: {
+                    'X-RapidAPI-Host': 'mashape-community-urban-dictionary.p.rapidapi.com',
+                    'X-RapidAPI-Key': apiKey
+                }
+            };
+
+            try {
+                const response = await fetch(apiUrl, options);
+                const data = await response.json();
+
+                if (data.list && data.list.length > 0) {
+                    const definition = data.list[0].definition;
+
+                    wordTitle.textContent = searchInput;
+                    wordDefinition.textContent = definition;
+                } else {
+                    wordTitle.textContent = 'Kata tidak ditemukan';
+                    wordDefinition.textContent = 'Tidak ada definisi yang ditemukan untuk kata tersebut.';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                wordTitle.textContent = 'Error';
+                wordDefinition.textContent = 'Terjadi kesalahan saat mencari definisi.';
+            }
+        }
+    </script>
+</body>
+</html
